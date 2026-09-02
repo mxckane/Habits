@@ -16,6 +16,8 @@ struct WeekRowStats: View {
     
     @Query private var records: [Record]
     
+    @State private var markHeight: CGFloat = 0.0
+    
     private var datesRange: [Date] = {
         var dates: [Date] = []
         let startOfCurrentWeek = Calendar.current.dateInterval(of: .weekOfYear, for: .now)!.start
@@ -62,6 +64,7 @@ struct WeekRowStats: View {
         
         VStack(spacing: 4) {
             Mark(state: state)
+                .readSize(.vertical, into: $markHeight)
             Text(symbol)
                 .frame(height: 14)
                 .foregroundStyle(.accent)
@@ -78,7 +81,7 @@ struct WeekRowStats: View {
             Capsule()
                 .fill(.weekRowSeparator)
                 .padding(.vertical, 2)
-                .frame(width: 1.5)
+                .frame(width: 1.5, height: markHeight)
             Capsule()
                 .fill(.weekRowSeparatorSecondary)
                 .frame(width: 1.5, height: 14)
