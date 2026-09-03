@@ -14,8 +14,8 @@ struct MonthGrid: View {
     
     private let model: MonthGridViewModel
     
-    init(month date: Date, habit: Habit) {
-        self.model = MonthGridViewModel(date: date)
+    init(cellSize: CGFloat? = nil, month date: Date, habit: Habit) {
+        self.model = MonthGridViewModel(cellSize: cellSize, date: date)
         
         let habitID = habit.id
         let timeInterval = model.monthDate.interval(of: .month)
@@ -59,6 +59,7 @@ struct MonthGrid: View {
                             }
                         }
                     }
+                    .frame(maxWidth: model.cellSize)
                 }
             }
         }
@@ -66,7 +67,7 @@ struct MonthGrid: View {
 }
 
 struct MonthGridViewModel {
-    
+    let cellSize: CGFloat?
     let monthDate: Date
     let daysCount: Int
     let columnsCount: Int
@@ -74,7 +75,8 @@ struct MonthGridViewModel {
     let validIndexRange: Range<Int>
     let monthName: String
     
-    init(date: Date) {
+    init(cellSize: CGFloat?, date: Date) {
+        self.cellSize = cellSize
         self.monthDate = date.leavingComponents([.calendar, .year, .month])
         self.daysCount = monthDate.count(of: .day, in: .month)
         self.columnsCount = monthDate.count(of: .weekOfMonth, in: .month)
