@@ -14,10 +14,10 @@ struct MonthGrid: View {
     
     private let model: MonthGridViewModel
     
-    init(cellSize: CGFloat? = nil, month date: Date, habit: Habit) {
-        self.model = MonthGridViewModel(cellSize: cellSize, date: date)
+    init(_ model: MonthGridViewModel) {
+        self.model = model
         
-        let habitID = habit.id
+        let habitID = model.habit.id
         let timeInterval = model.monthDate.interval(of: .month)
         let predicate = #Predicate<Record> { record in
             record.habit?.id == habitID
@@ -66,26 +66,6 @@ struct MonthGrid: View {
     }
 }
 
-struct MonthGridViewModel {
-    let cellSize: CGFloat?
-    let monthDate: Date
-    let daysCount: Int
-    let columnsCount: Int
-    let paddingCellsCount: Int
-    let validIndexRange: Range<Int>
-    let monthName: String
-    
-    init(cellSize: CGFloat?, date: Date) {
-        self.cellSize = cellSize
-        self.monthDate = date.leavingComponents([.calendar, .year, .month])
-        self.daysCount = monthDate.count(of: .day, in: .month)
-        self.columnsCount = monthDate.count(of: .weekOfMonth, in: .month)
-        self.paddingCellsCount = monthDate.amountOfPaddingDays
-        self.validIndexRange = paddingCellsCount..<daysCount+paddingCellsCount
-        self.monthName = date.monthName(.wide)
-    }
-}
-
 #Preview {
     @Previewable @State var offset = 0
     let habit = Habit(emoji: "🌁", title: "Sample")
@@ -98,9 +78,12 @@ struct MonthGridViewModel {
         "\(date.formatted(.dateTime.month(.wide))) \(date.formatted(.dateTime.year()))"
     }
     
+    var model: MonthGridViewModel {
+        MonthGridViewModel(cellSize: 22.0, date: date, habit: habit)
+    }
+    
     VStack(spacing: 32.0) {
-        MonthGrid(month: date, habit: habit)
-            .frame(height: 192.0)
+        MonthGrid(model)
         Stepper(stepperText, value: $offset)
             .frame(width: 240.0)
     }
