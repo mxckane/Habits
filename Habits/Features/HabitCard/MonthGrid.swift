@@ -12,13 +12,12 @@ struct MonthGrid: View {
     
     @Query private var records: [Record]
     
+    private let cellSize: CGFloat
     private let model: MonthGridViewModel
     
-    init(_ model: MonthGridViewModel) {
-        self.model = model
-        
+    init(cellSize: CGFloat, model: MonthGridViewModel) {
         let habitID = model.habit.id
-        let timeInterval = model.monthDate.interval(of: .month)
+        let timeInterval = model.date.interval(of: .month)
         let predicate = #Predicate<Record> { record in
             record.habit?.id == habitID
             && record.timestamp >= timeInterval.start
@@ -26,6 +25,8 @@ struct MonthGrid: View {
         }
         
         self._records = Query(filter: predicate)
+        self.cellSize = cellSize
+        self.model = model
     }
     
     var body: some View {
@@ -36,16 +37,16 @@ struct MonthGrid: View {
                 .font(.footnote)
                 .fontWeight(.bold)
                 .frame(height: 18.0)
-            Grid(horizontalSpacing: 2.0, verticalSpacing: 2.0) {
+            Grid(horizontalSpacing: model.cellSpacing, verticalSpacing: model.cellSpacing) {
                 ForEach(0..<7) { row in
                     GridRow {
-                        ForEach(0..<model.columnsCount, id: \.self) { column in
+                        ForEach(0..<model.columnCount, id: \.self) { column in
                             let index = row + column * 7
                             
                             let date = Calendar.current.date(
                                 byAdding: .day,
-                                value: index - model.paddingCellsCount,
-                                to: model.monthDate
+                                value: index - model.paddingCellCount,
+                                to: model.date
                             )!
                             
                             if !model.validIndexRange.contains(index) {
@@ -59,7 +60,7 @@ struct MonthGrid: View {
                             }
                         }
                     }
-                    .frame(maxWidth: model.cellSize)
+                    .frame(width: cellSize)
                 }
             }
         }
@@ -79,11 +80,11 @@ struct MonthGrid: View {
     }
     
     var model: MonthGridViewModel {
-        MonthGridViewModel(cellSize: 22.0, date: date, habit: habit)
+        MonthGridViewModel(date: date, habit: habit)
     }
     
     VStack(spacing: 32.0) {
-        MonthGrid(model)
+        MonthGrid(cellSize: 22.0, model: model)
         Stepper(stepperText, value: $offset)
             .frame(width: 240.0)
     }
