@@ -39,6 +39,7 @@ struct MonthGridStats: View {
     
     var body: some View {
         HStack(alignment: .bottom, spacing: 4.0) {
+            weekdaysColumn(cellHeight: cellSize)
             HStack(spacing: gridSpacing) {
                 ForEach(monthGridViewModels, id: \.date) { model in
                     MonthGrid(cellSize: cellSize, model: model)
@@ -48,6 +49,28 @@ struct MonthGridStats: View {
             .frame(maxWidth: .infinity)
             .border(.green.opacity(1/2))
             .readSize(.horizontal, into: $availableWidth)
+        }
+    }
+    
+    @ViewBuilder func weekdaysColumn(cellWidth: CGFloat = 16.0, cellHeight: CGFloat) -> some View {
+        let symbols = Calendar.current.veryShortWeekdaySymbols
+        let systemFirstWeekdayIndex = Calendar.current.firstWeekday - 1
+        var weekDays: [String] { Array(symbols[systemFirstWeekdayIndex...]) + Array(symbols[..<systemFirstWeekdayIndex]) }
+        
+        VStack(spacing: cellSpacing) {
+            ForEach(0..<weekDays.count, id: \.self) { index in
+                Text(symbols[index])
+                    .foregroundStyle(.accent)
+                    .font(.system(size: 9.0))
+                    .fontWeight(.semibold)
+                    .frame(width: cellWidth, height: cellHeight)
+            }
+        }
+        .padding(.trailing, 2.0)
+        .overlay(alignment: .trailing) {
+            Capsule()
+                .fill(.monthGridStatsWeekdaysColumnSeparator)
+                .frame(width: 1.0)
         }
     }
     
