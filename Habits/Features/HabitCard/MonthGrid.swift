@@ -64,6 +64,8 @@ struct MonthGrid: View {
                 }
             }
         }
+        .contentShape(.rect)
+        .onTapGesture { ModalManager.shared.present(.habitCalendarSheet(model.habit, model.date)) }
     }
 }
 
