@@ -18,9 +18,14 @@ struct HabitCard: View {
     var body: some View {
         VStack(spacing: 8) {
             CardHeader(habit)
-            MonthGridStats(habit: habit)
+            MonthGridStats(habit)
         }
         .padding(12)
         .background(defaultStyleShape(RoundedRectangle(cornerRadius: 24), isElevated: true))
     }
+}
+
+#Preview {
+    HabitCard(.init(emoji: "🌁", title: "Sample"))
+        .padding(16.0)
 }

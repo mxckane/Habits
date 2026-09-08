@@ -43,11 +43,9 @@ struct MonthGridStats: View {
             HStack(spacing: gridSpacing) {
                 ForEach(monthGridViewModels, id: \.date) { model in
                     MonthGrid(cellSize: cellSize, model: model)
-                        .border(.yellow.opacity(1/2))
                 }
             }
             .frame(maxWidth: .infinity)
-            .border(.green.opacity(1/2))
             .readSize(.horizontal, into: $availableWidth)
         }
     }
