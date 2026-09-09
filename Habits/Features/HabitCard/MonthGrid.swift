@@ -49,15 +49,18 @@ struct MonthGrid: View {
                                 to: model.date
                             )!
                             
+                            let state: Mark.State =
                             if !model.validIndexRange.contains(index) {
-                                Mark(state: .placeholder)
+                                .placeholder
                             } else if records.contains(where: { Calendar.current.isDate($0.timestamp, inSameDayAs: date) }) {
-                                Mark(state: .checked)
+                                .checked
                             } else if date.isToday {
-                                Mark(state: .today)
+                                .today
                             } else {
-                                Mark(state: .unchecked)
+                                .unchecked
                             }
+                            
+                            AnimatableMarkWrapper(date: date, state: state, cellSize: cellSize)
                         }
                     }
                     .frame(width: cellSize)
@@ -66,6 +69,18 @@ struct MonthGrid: View {
         }
         .contentShape(.rect)
         .onTapGesture { ModalManager.shared.present(.habitCalendarSheet(model.habit, model.date)) }
+    }
+    
+    private struct AnimatableMarkWrapper: View {
+        let date: Date
+        let state: Mark.State
+        let cellSize: CGFloat
+        
+        var body: some View {
+            Mark(state: state)
+                .frame(width: cellSize, height: cellSize)
+                .animation(.spring(duration: 0.375, bounce: 0.425), value: state)
+        }
     }
 }
 
