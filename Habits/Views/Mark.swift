@@ -43,6 +43,7 @@ struct Mark: View {
                 .scaleEffect(scale)
         }
         .aspectRatio(1.0, contentMode: .fit)
+        .animation(.spring(duration: state == .checked ? 0.375 : 0.475 , bounce: 0.425), value: state)
     }
     
 }

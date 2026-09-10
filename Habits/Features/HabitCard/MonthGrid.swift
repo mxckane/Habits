@@ -60,7 +60,7 @@ struct MonthGrid: View {
                                 .unchecked
                             }
                             
-                            AnimatableMarkWrapper(date: date, state: state, cellSize: cellSize)
+                            Mark(state: state)
                         }
                     }
                     .frame(width: cellSize)
@@ -69,18 +69,6 @@ struct MonthGrid: View {
         }
         .contentShape(.rect)
         .onTapGesture { ModalManager.shared.present(.habitCalendarSheet(model.habit, model.date)) }
-    }
-    
-    private struct AnimatableMarkWrapper: View {
-        let date: Date
-        let state: Mark.State
-        let cellSize: CGFloat
-        
-        var body: some View {
-            Mark(state: state)
-                .frame(width: cellSize, height: cellSize)
-                .animation(.spring(duration: 0.375, bounce: 0.425), value: state)
-        }
     }
 }
 
