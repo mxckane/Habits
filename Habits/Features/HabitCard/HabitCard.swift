@@ -9,6 +9,12 @@ import SwiftUI
 
 struct HabitCard: View {
     
+    @AppStorage("statisticsDisplayMode") private var statisticsDisplayMode = StatisticsDisplayMode.week.rawValue
+    
+    private var displayMode: StatisticsDisplayMode {
+        StatisticsDisplayMode(rawValue: statisticsDisplayMode) ?? .week
+    }
+    
     private let habit: Habit
     
     init(_ habit: Habit) {
@@ -16,12 +22,22 @@ struct HabitCard: View {
     }
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: displayMode == .week ? 8.0 : 12.0) {
             CardHeader(habit)
-            MonthGridStats(habit)
+            switch displayMode {
+            case .week: WeekRowStats(habit: habit)
+            case .month: MonthGridStats(habit)
+            }
         }
         .padding(12)
         .background(defaultStyleShape(RoundedRectangle(cornerRadius: 24), isElevated: true))
+    }
+}
+
+private extension HabitCard {
+    enum StatisticsDisplayMode: String {
+        case week
+        case month
     }
 }
 
