@@ -24,10 +24,21 @@ struct HabitCard: View {
     var body: some View {
         VStack(spacing: displayMode == .week ? 8.0 : 12.0) {
             CardHeader(habit)
+            
             switch displayMode {
             case .week: WeekRowStats(habit: habit)
             case .month: MonthGridStats(habit)
             }
+            
+            #if DEBUG
+            // FIXME: Performance issue – noticeable delay upon switching
+            DEBUG_Swap_Button {
+                statisticsDisplayMode =
+                statisticsDisplayMode == StatisticsDisplayMode.week.rawValue ?
+                StatisticsDisplayMode.month.rawValue :
+                StatisticsDisplayMode.week.rawValue
+            }
+            #endif
         }
         .padding(12)
         .background(defaultStyleShape(RoundedRectangle(cornerRadius: 24), isElevated: true))
