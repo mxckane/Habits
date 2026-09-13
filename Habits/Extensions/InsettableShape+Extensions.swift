@@ -15,7 +15,7 @@ extension InsettableShape {
                 if hasStroke {
                     StrokeBorderShapeView(
                         shape: self,
-                        style: .shapeStroke,
+                        style: .habitCardStroke,
                         strokeStyle: .init(lineWidth: 1),
                         isAntialiased: true,
                         background: Color.clear
