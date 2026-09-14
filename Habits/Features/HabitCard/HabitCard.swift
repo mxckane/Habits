@@ -9,16 +9,21 @@ import SwiftUI
 
 struct HabitCard: View {
     
-    @AppStorage("statisticsDisplayMode") private var statisticsDisplayMode = StatisticsDisplayMode.week.rawValue
+    @AppStorage private var statisticsDisplayMode: String
+    
+    private let habit: Habit
     
     private var displayMode: StatisticsDisplayMode {
         StatisticsDisplayMode(rawValue: statisticsDisplayMode) ?? .week
     }
     
-    private let habit: Habit
-    
     init(_ habit: Habit) {
         self.habit = habit
+        
+        self._statisticsDisplayMode = AppStorage(
+            wrappedValue: StatisticsDisplayMode.week.rawValue,
+            "statisticsDisplayMode_\(habit.id)"
+        )
     }
     
     var body: some View {

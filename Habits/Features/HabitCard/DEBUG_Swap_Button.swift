@@ -24,5 +24,6 @@ struct DEBUG_Swap_Button: View {
                         .font(.system(size: 12.0, weight: .medium))
                 }
         }
+        .geometryGroup()
     }
 }
