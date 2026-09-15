@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HabitCard: View {
-    
+    // AMEND
     @AppStorage private var statisticsDisplayMode: String
     
     private let habit: Habit
