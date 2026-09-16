@@ -9,11 +9,13 @@ import SwiftUI
 
 struct DEBUG_Swap_Button: View {
     
-    let action: () -> Void
+    let habit: Habit
     
     var body: some View {
         Button {
-            action()
+            let currentKey = UserDefaults.standard.string(forKey: "statisticsDisplayMode_\(habit.id)")
+            let newModeRawValue = currentKey == "week" ? "month" : "week"
+            UserDefaults.standard.setValue(newModeRawValue, forKeyPath: "statisticsDisplayMode_\(habit.id)")
         } label: {
             Capsule()
                 .fill(Color(cgColor: .init(gray: 0.4, alpha: 1.0)))

@@ -40,7 +40,7 @@ struct HabitCard: View {
     }
 }
 
-private extension HabitCard {
+extension HabitCard {
     enum StatisticsDisplayMode: String {
         case week
         case month
