@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HabitCard: View {
-    // AMEND
+    
     @AppStorage private var statisticsDisplayMode: String
     
     private let habit: Habit
@@ -34,16 +34,6 @@ struct HabitCard: View {
             case .week: WeekRowStats(habit: habit)
             case .month: MonthGridStats(habit)
             }
-            
-            #if DEBUG
-            // FIXME: Performance issue – noticeable delay upon switching
-            DEBUG_Swap_Button {
-                statisticsDisplayMode =
-                statisticsDisplayMode == StatisticsDisplayMode.week.rawValue ?
-                StatisticsDisplayMode.month.rawValue :
-                StatisticsDisplayMode.week.rawValue
-            }
-            #endif
         }
         .padding(12)
         .background(defaultStyleShape(RoundedRectangle(cornerRadius: 24), isElevated: true))

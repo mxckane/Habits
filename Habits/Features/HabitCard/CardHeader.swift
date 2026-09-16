@@ -86,7 +86,15 @@ struct CardHeader: View {
             
             Spacer()
             
-            StreakButton(habit: habit)
+            HStack(spacing: 4.0) {
+#if DEBUG
+                // FIXME: Performance issue – noticeable delay upon switching
+                DEBUG_Swap_Button {
+                    //
+                }
+#endif
+                StreakButton(habit: habit)
+            }
         }
     }
 }
