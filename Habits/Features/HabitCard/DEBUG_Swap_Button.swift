@@ -9,6 +9,8 @@ import SwiftUI
 
 struct DEBUG_Swap_Button: View {
     
+    // TODO: Beautify appearance
+    
     let habit: Habit
     
     var body: some View {
@@ -17,12 +19,12 @@ struct DEBUG_Swap_Button: View {
             let newModeRawValue = currentKey == "week" ? "month" : "week"
             UserDefaults.standard.setValue(newModeRawValue, forKeyPath: "statisticsDisplayMode_\(habit.id)")
         } label: {
-            Capsule()
-                .fill(Color(cgColor: .init(gray: 0.4, alpha: 1.0)))
-                .frame(width: 48.0, height: 24.0)
+            RoundedRectangle(cornerRadius: 12.0)
+                .fill(.accent)
+                .frame(width: 52.0, height: 38.0)
                 .overlay {
                     Image(systemName: "rectangle.2.swap")
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(Color.background)
                         .font(.system(size: 12.0, weight: .medium))
                 }
         }
