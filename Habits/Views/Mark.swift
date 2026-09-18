@@ -10,18 +10,18 @@ import SwiftUI
 struct Mark: View {
     
     let state: State
-    let scale: CGFloat
+    let size: CGFloat?
     let colors: [Color]
     let cornerRadiusCoefficient: CGFloat
     
     init(state: State = .unchecked) {
         self.state = state
         
-        self.scale = switch state {
+        self.size = switch state {
         case .placeholder: 0.0
-        case .unchecked: 0.25
-        case .today: 0.5
-        case .checked: 1.0
+        case .unchecked: 4.0
+        case .today: 8.0
+        case .checked: nil
         }
         
         self.colors = switch state {
@@ -40,7 +40,8 @@ struct Mark: View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: proxy.size.width * cornerRadiusCoefficient)
                 .fill(colors.gradient)
-                .scaleEffect(scale)
+                .frame(width: size, height: size)
+                .position(x: proxy.size.width / 2.0, y: proxy.size.height / 2.0)
         }
         .aspectRatio(1.0, contentMode: .fit)
         .animation(.spring(duration: state == .checked ? 0.375 : 0.475 , bounce: 0.425), value: state)
@@ -58,10 +59,11 @@ extension Mark {
 }
 
 #Preview {
-    VStack(spacing: 32.0) {
+    VStack(spacing: 0.0) {
         Mark(state: .placeholder)
         Mark(state: .unchecked)
         Mark(state: .today)
         Mark(state: .checked)
     }
+    .frame(height: 160.0)
 }

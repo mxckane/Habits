@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO: Review
+
 struct MonthGridStats: View {
     
     private let habit: Habit
