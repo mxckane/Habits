@@ -9,8 +9,6 @@ import SwiftUI
 
 struct DEBUG_Swap_Button: View {
     
-    // TODO: Beautify appearance
-    
     let habit: Habit
     
     var body: some View {
