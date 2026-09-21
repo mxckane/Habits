@@ -115,6 +115,7 @@ struct HabitCalendarSheet: View {
                 .scrollIndicators(.hidden)
                 .scrollPosition(id: $focusedMonth, anchor: .leading)
                 .onAppear { focusedMonth = initiallyPresentedMonth }
+                // FIXME: Check if mask causing last day cell animation clipping
                 .mask {
                     VStack(spacing: .zero) {
                         Rectangle()
