@@ -14,33 +14,35 @@ extension View {
         modifier(ModalPresenter())
     }
     
+    // TODO: Replace current instances
     func modify(@ViewBuilder _ transform: (_ view: Self) -> some View) -> some View {
         transform(self)
     }
     
-    // TODO: Rewrite
-    @ViewBuilder public func glassEffect(
-        isEnabled: Bool = true,
+    /// Applies a glass effect to this view using #available expression
+    @ViewBuilder func glassEffect(
+        isClear: Bool = false,
         isInteractive: Bool = false,
-        isClear: Bool = true,
         tint: Color? = nil,
-        in shape: some Shape = Circle(),
-        else otherView: (Self) -> some View
+        in shape: some Shape = Capsule(),
+        _ fallbackView: ((Self) -> some View)? = nil
     ) -> some View {
         if #available(anyAppleOS 26.0, *) {
-            let effect: Glass = if isEnabled {
+            let glass: Glass = {
                 if isClear {
-                    .clear.interactive(isInteractive).tint(tint)
+                    return Glass.clear.interactive(isInteractive).tint(tint)
                 } else {
-                    .regular.interactive(isInteractive).tint(tint)
+                    return Glass.regular.interactive(isInteractive).tint(tint)
                 }
-            } else {
-                .identity
-            }
+            }()
             
-            glassEffect(effect, in: shape)
+            self.glassEffect(glass, in: shape)
         } else {
-            otherView(self)
+            if let fallbackView {
+                fallbackView(self)
+            } else {
+                self
+            }
         }
     }
     
