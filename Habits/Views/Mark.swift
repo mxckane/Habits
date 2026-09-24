@@ -10,7 +10,7 @@ import SwiftUI
 struct Mark: View {
     let state: State
     let size: CGFloat?
-    let colors: [Color]
+    let color: Color
     let cornerRadiusCoefficient: CGFloat
 
     enum State {
@@ -30,10 +30,10 @@ struct Mark: View {
         case .checked: nil
         }
 
-        self.colors = switch state {
-        case .placeholder: [.clear]
-        case .unchecked: [.weekRowEmptyCell]
-        case .today, .checked: [.weekRowCellStart, .weekRowCellEnd]
+        self.color = switch state {
+        case .placeholder: .clear
+        case .unchecked: .accentSecondary
+        case .today, .checked: .accentPrimary
         }
 
         self.cornerRadiusCoefficient = switch state {
@@ -45,7 +45,7 @@ struct Mark: View {
     var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: proxy.size.width * cornerRadiusCoefficient)
-                .fill(colors.gradient)
+                .fill(color)
                 .frame(width: size, height: size)
                 .position(x: proxy.size.width / 2.0, y: proxy.size.height / 2.0)
         }
@@ -55,7 +55,7 @@ struct Mark: View {
 }
 
 #Preview {
-    VStack(spacing: 0.0) {
+    VStack(spacing: .zero) {
         Mark(state: .placeholder)
         Mark(state: .unchecked)
         Mark(state: .today)
