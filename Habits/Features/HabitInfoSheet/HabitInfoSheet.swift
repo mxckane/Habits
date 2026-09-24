@@ -8,28 +8,27 @@
 import SwiftUI
 
 struct HabitInfoSheet: View {
-    
     private let habit: Habit?
-    
+
     @State private var emoji: String
     @State private var title: String
-    
+
     private var formattedTitle: String {
         title.trimmingCharacters(in: .whitespacesAndNewlines)
     }
-    
+
     init(_ habit: Habit? = nil) {
         self.habit = habit
         self.emoji = habit?.emoji ?? ""
         self.title = habit?.title ?? ""
     }
-    
+
     var body: some View {
         VStack(spacing: 24) {
             sheetHeader()
             VStack(spacing: 12) {
                 inputControls()
-                
+
                 if let habit {
                     ConfirmationButton {
                         DataManager.shared.delete(habit)
@@ -40,7 +39,7 @@ struct HabitInfoSheet: View {
         }
         .padding(16)
     }
-    
+
     private func sheetHeader() -> some View {
         HStack {
             cancelButton()
@@ -52,7 +51,7 @@ struct HabitInfoSheet: View {
             confirmButton()
         }
     }
-    
+
     private func cancelButton() -> some View {
         Button {
             ModalManager.shared.dismiss()
@@ -75,12 +74,14 @@ struct HabitInfoSheet: View {
                 }
         }
     }
-    
+
     @ViewBuilder private func confirmButton() -> some View {
         var isEnabled: Bool { !formattedTitle.isEmpty }
-        
+
         Button {
-            guard isEnabled else { return }
+            guard isEnabled else {
+                return
+            }
             if let habit {
                 habit.emoji = emoji
                 habit.title = formattedTitle
@@ -109,7 +110,7 @@ struct HabitInfoSheet: View {
         .allowsHitTesting(isEnabled)
         .animation(.smooth(duration: 0.3), value: isEnabled)
     }
-    
+
     private func inputControls() -> some View {
         HStack(spacing: 8) {
             EmojiPicker(emoji: $emoji)
@@ -120,7 +121,7 @@ struct HabitInfoSheet: View {
 
 #Preview {
     let habit = Habit(emoji: "🥖", title: "Baguette")
-    
+
     Color.background.ignoresSafeArea()
         .modalPresenter()
         .task {

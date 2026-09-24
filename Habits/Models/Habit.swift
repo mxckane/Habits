@@ -9,15 +9,14 @@ import Foundation
 import SwiftData
 
 @Model class Habit {
-    
     @Attribute(.unique) var id: UUID
-    
+
     var emoji: String
     var title: String
     var timestamp: Date
-    
+
     @Relationship(deleteRule: .cascade, inverse: \Record.habit) var records: [Record]
-    
+
     init(
         emoji: String,
         title: String,

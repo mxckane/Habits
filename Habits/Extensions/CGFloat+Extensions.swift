@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-let markCornerRadiusCoefficient: CGFloat = 0.34375
-
 extension CGFloat {
+    static let markCornerRadiusCoefficient: CGFloat = 0.34375
+
     static var displayCornerRadius: CGFloat {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return 0 }
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+            return 0
+        }
         return windowScene.screen.value(forKey: "_displayCornerRadius") as? CGFloat ?? 0
     }
 }

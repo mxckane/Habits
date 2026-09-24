@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct CalendarSheetHeader: View {
-    
     @Environment(\.colorScheme) private var colorScheme
-    
+
     private let habit: Habit
-    
+
     init(habit: Habit) {
         self.habit = habit
     }
-    
+
     var body: some View {
         HStack {
             HStack(spacing: 8) {
@@ -26,14 +25,14 @@ struct CalendarSheetHeader: View {
                     .frame(width: 34, height: 34)
                     .saturation(habit.emoji.isEmpty ? 0 : 1)
                     .contrast(habit.emoji.isEmpty ? 1.17 : 1)
-                    .brightness(!habit.emoji.isEmpty && colorScheme == .dark  ? -0.11 : 0)
+                    .brightness(!habit.emoji.isEmpty && colorScheme == .dark ? -0.11 : 0)
                 Text(habit.title)
                     .font(.title3.bold())
                     .foregroundStyle(.accent)
             }
-            
+
             Spacer()
-            
+
             Button {
                 ModalManager.shared.dismiss()
             } label: {

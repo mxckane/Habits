@@ -8,27 +8,26 @@
 import SwiftUI
 
 struct CardHeader: View {
-    
     @Environment(\.colorScheme) private var colorScheme
-    
+
     private let habit: Habit
-    
+
     @State private var title: String
     @State private var emoji: String
-    
+
     @State private var saturation: CGFloat = 0.0
     @State private var emojiScale = 1.0
     @State private var isAnimationInProgress = false
-    
+
     private var displayedEmoji: String { emoji.isEmpty ? "🎯" : emoji }
-    
+
     init(_ habit: Habit) {
         self.habit = habit
         self.title = habit.title
         self.emoji = habit.emoji
         _saturation = State(initialValue: emoji.isEmpty ? 0.0 : 1.0)
     }
-    
+
     var body: some View {
         HStack {
             HStack(spacing: 4) {
@@ -50,19 +49,25 @@ struct CardHeader: View {
             .onTapGesture { ModalManager.shared.present(.habitInfoSheet(habit)) }
             .onChange(of: [emoji: habit.emoji, title: habit.title]) { old, new in
                 Task {
-                    guard !isAnimationInProgress else { return }
-                    guard let newEmoji = new[emoji] else { return }
-                    guard let oldEmoji = old[emoji] else { return }
-                    guard let newTitle = new[title] else { return }
-                    
+                    guard !isAnimationInProgress,
+                          let newEmoji = new[emoji],
+                          let oldEmoji = old[emoji],
+                          let newTitle = new[title]
+                    else {
+                        return
+                    }
+
                     isAnimationInProgress = true
-                    
+
                     if title != newTitle {
                         try? await Task.sleep(for: .seconds(0.5))
                         withAnimation { title = newTitle }
                     }
-                    
-                    if newEmoji.isDefaultHabitEmoji && oldEmoji.isEmpty || newEmoji.isEmpty && oldEmoji.isDefaultHabitEmoji {
+
+                    if newEmoji.isDefaultHabitEmoji &&
+                        oldEmoji.isEmpty ||
+                        newEmoji.isEmpty &&
+                        oldEmoji.isDefaultHabitEmoji {
                         try? await Task.sleep(for: .seconds(0.5))
                         withAnimation(.smooth(duration: 0.8)) {
                             saturation = newEmoji.isEmpty ? 0.0 : 1.0
@@ -70,27 +75,25 @@ struct CardHeader: View {
                     } else {
                         if emoji != newEmoji {
                             try? await Task.sleep(for: .seconds(0.55))
-                            
+
                             withAnimation(.spring(.bouncy(duration: 0.3))) { emojiScale = 0.2 }
                             try? await Task.sleep(for: .seconds(0.15))
                             withAnimation(.spring(.bouncy(duration: 0.3))) { emojiScale = 1.0 }
-                            
+
                             saturation = newEmoji.isEmpty ? 0.0 : 1.0
                             emoji = newEmoji
                         }
                     }
-                    
+
                     isAnimationInProgress = false
                 }
             }
-            
+
             Spacer()
-            
+
             HStack(spacing: 8.0) {
-#if DEBUG
                 // FIXME: Performance issue – noticeable delay upon switching
-                DEBUG_Swap_Button(habit: habit)
-#endif
+                SwapButton(habit: habit)
                 StreakButton(habit: habit)
             }
         }

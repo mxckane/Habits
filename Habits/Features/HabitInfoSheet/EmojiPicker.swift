@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct EmojiPicker: View {
-    
     @Environment(\.colorScheme) private var colorScheme
-    
+
     @Binding var emoji: String
-    
+
     @FocusState private var isFocused
-    
+
     var body: some View {
         Circle()
             .applyDefaultStyling()
@@ -24,7 +23,7 @@ struct EmojiPicker: View {
             .contentShape(.circle)
             .onTapGesture(perform: managePickerState)
     }
-    
+
     @ViewBuilder private func overlayContent() -> some View {
         Image(systemName: "plus")
             .font(.title2)
@@ -36,7 +35,7 @@ struct EmojiPicker: View {
             .brightness(colorScheme == .light ? 0 : -0.11)
         emojiTextField()
     }
-    
+
     private func emojiTextField() -> some View {
         TextField("", text: $emoji)
             .tint(.accent)
@@ -47,18 +46,18 @@ struct EmojiPicker: View {
             .keyboardType(.init(rawValue: 124)!)
             .opacity(emoji.isEmpty && isFocused ? 1 : 0)
     }
-    
+
     private func updateEmoji(oldValue: String, newValue: String) {
         if newValue.count < oldValue.count {
             emoji.removeAll()
         }
-        
+
         emoji = String(newValue.suffix(1))
     }
-    
+
     private func managePickerState() {
         isFocused = (isFocused && !emoji.isEmpty) ? false : true
-        
+
         if !isFocused && emoji.isEmpty {
             emoji = "🎯"
         }
@@ -67,6 +66,6 @@ struct EmojiPicker: View {
 
 #Preview {
     @Previewable @State var emoji = ""
-    
+
     EmojiPicker(emoji: $emoji)
 }

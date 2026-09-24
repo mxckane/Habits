@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct FooterMetric: Identifiable {
-    let id: UUID = UUID()
-    
-    var header: String? = nil
-    var metric: LocalizedStringResource? = nil
-    var imageSystemName: String? = nil
-    
+    let id = UUID()
+
+    var header: String?
+    var value: LocalizedStringResource?
+    var imageSystemName: String?
+
     var metricToImageSpacing: CGFloat = 2.0
 }

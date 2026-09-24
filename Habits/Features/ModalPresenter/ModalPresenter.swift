@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct ModalPresenter: ViewModifier {
-    
     private let manager = ModalManager.shared
-    
+
     @State private var isKeyboardPresented = false
     @State private var sheetContentHeight: CGFloat = 0
     private var offsetY: CGFloat { manager.isPresented ? .zero : sheetContentHeight + sheetPadding }
-    
+
     private var blurRadius: CGFloat { manager.isPresented ? 6 : 0 }
-    
+
     private var sheetPadding: CGFloat = 8
     private let sheetTopEdgeCornerRadius: CGFloat = 38
-    
+
     private var sheetBottomEdgeCornerRadius: CGFloat {
         CGFloat.displayCornerRadius == 0
         ? sheetTopEdgeCornerRadius
         : isKeyboardPresented ? sheetTopEdgeCornerRadius : (.displayCornerRadius - sheetPadding)
     }
-    
+
     private var sheetShape: UnevenRoundedRectangle {
         UnevenRoundedRectangle(
             topLeadingRadius: sheetTopEdgeCornerRadius,
@@ -35,7 +34,7 @@ struct ModalPresenter: ViewModifier {
             style: .continuous
         )
     }
-    
+
     func body(content: Content) -> some View {
         content
             .blur(radius: blurRadius)
@@ -47,14 +46,14 @@ struct ModalPresenter: ViewModifier {
                         Color.clear.contentShape(.rect)
                             .allowsHitTesting(manager.isPresented)
                             .onTapGesture { ModalManager.shared.dismiss() }
-                        
+
                         ZStack(alignment: .top) {
                             switch manager.currentContent {
                             case .newHabitSheet:
                                 HabitInfoSheet()
-                            case .habitInfoSheet(let habit):
+                            case let .habitInfoSheet(habit):
                                 HabitInfoSheet(habit)
-                            case .habitCalendarSheet(let habit, let date):
+                            case let .habitCalendarSheet(habit, date):
                                 HabitCalendarSheet(habit: habit, date: date)
                             }
                         }

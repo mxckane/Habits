@@ -1,5 +1,5 @@
 //
-//  DEBUG_Swap_Button.swift
+//  SwapButton.swift
 //  Habits
 //
 //  Created by Andrey on 12/09/2026.
@@ -7,10 +7,9 @@
 
 import SwiftUI
 
-struct DEBUG_Swap_Button: View {
-    
+struct SwapButton: View {
     let habit: Habit
-    
+
     var body: some View {
         Button {
             let currentKey = UserDefaults.standard.string(forKey: "statisticsDisplayMode_\(habit.id)")

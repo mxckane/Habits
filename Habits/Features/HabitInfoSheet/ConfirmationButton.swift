@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct ConfirmationButton: View {
-    
     private var action: () -> Void
-    
+
     init(_ action: @escaping () -> Void) {
         self.action = action
     }
-    
+
     @State private var progress = -1
     @State private var incrementationTask: Task<Void, Never>?
     @State private var disengagementTask: Task<Void, Never>?
-    
+
     @State private var isCanceled = false
     @GestureState private var isHolding = false
-    
+
     @State private var buttonFrame: CGRect = .zero
     @State private var dragLocation: CGPoint = .zero
     @State private var fillingCapsuleWidth: CGFloat = .zero
-    
+
     var body: some View {
         HStack(spacing: 4) {
             if status == .resting {
@@ -34,7 +33,7 @@ struct ConfirmationButton: View {
                     .foregroundStyle(.deleteButtonLabel)
                     .transition(.blurReplace)
             }
-            
+
             if status == .resting {
                 Text("Delete")
                     .font(.headline)
@@ -72,7 +71,7 @@ struct ConfirmationButton: View {
         }
         .background {
             DefaultStyleShape(.capsule)
-            
+
             GeometryReader { proxy in
                 Capsule()
                     .foregroundStyle(.deleteButtonLabel)
@@ -86,11 +85,12 @@ struct ConfirmationButton: View {
         .onGeometryChange(for: CGRect.self) { proxy in
             proxy.frame(in: .global)
         } action: { newFrame in
-            
             buttonFrame = newFrame
-            
-            guard isHolding && !isCanceled else { return }
-            
+
+            guard isHolding && !isCanceled else {
+                return
+            }
+
             if !buttonFrame.insetBy(dx: -22, dy: -22).contains(dragLocation) && isHolding {
                 isCanceled = true
             }
@@ -99,29 +99,33 @@ struct ConfirmationButton: View {
             DragGesture(minimumDistance: .zero, coordinateSpace: .global)
                 .updating($isHolding) { drag, isHolding, _ in
                     dragLocation = drag.location
-                    
-                    guard !isCanceled else { return }
-                    
+
+                    guard !isCanceled else {
+                        return
+                    }
+
                     let deltaX = abs(drag.translation.width)
                     let deltaY = abs(drag.translation.height)
-                    
+
                     if deltaX > 0 || deltaY > 0 {
                         if !buttonFrame.insetBy(dx: -22, dy: -22).contains(dragLocation) {
                             isCanceled = true
                         }
                     }
-                    
-                    guard !isHolding else { return }
-                    
+
+                    guard !isHolding else {
+                        return
+                    }
+
                     isHolding = true
                 }
-                .onEnded { drag in
+                .onEnded { _ in
                     isCanceled = false
                 }
         )
         .onChange(of: [isHolding, isCanceled]) {
             if isHolding && !isCanceled { engage() }
-            if !isHolding || isCanceled { disengage() }
+            if !isHolding || isCanceled { disengage(withAction: false) }
         }
         .animation(.smooth, value: fillingCapsuleWidth)
         .animation(.smooth, value: progress)
@@ -129,31 +133,34 @@ struct ConfirmationButton: View {
         .animation(.smooth, value: isHolding)
         .animation(.smooth, value: isCanceled)
     }
-}
 
-private extension ConfirmationButton {
-    
     func engage() {
-        guard incrementationTask?.isCancelled ?? true else { return }
-        
+        guard incrementationTask?.isCancelled ?? true else {
+            return
+        }
+
         disengagementTask?.cancel()
-        
+
         incrementationTask = Task {
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(status == .resting ? 0.085 : (status == .engaged ? 0 : 1)))
-                guard !Task.isCancelled else { return }
-                if progress == 3 { disengage(shouldExecuteAction: true) ; break }
+                guard !Task.isCancelled else {
+                    return
+                }
+                if progress == 3 { disengage(withAction: true) ; break }
                 progress += 1
             }
         }
     }
-    
-    func disengage(shouldExecuteAction: Bool = false) {
-        guard disengagementTask?.isCancelled ?? true else { return }
-        
+
+    func disengage(withAction: Bool) {
+        guard disengagementTask?.isCancelled ?? true else {
+            return
+        }
+
         incrementationTask?.cancel()
-        
-        if shouldExecuteAction {
+
+        if withAction {
             disengagementTask = Task {
                 progress = -1
                 action()
@@ -162,12 +169,14 @@ private extension ConfirmationButton {
             disengagementTask = Task {
                 progress = 0
                 try? await Task.sleep(for: .seconds(4)) // Disengagement timeout
-                guard !Task.isCancelled else { return }
+                guard !Task.isCancelled else {
+                    return
+                }
                 progress = -1
             }
         }
     }
-    
+
     enum ButtonState {
         case resting
         case engaged
@@ -175,14 +184,14 @@ private extension ConfirmationButton {
         case executingAction
         case undefined
     }
-    
+
     var status: ButtonState {
         switch progress {
-        case ..<0 : return .resting
-        case 0 : return .engaged
-        case 0...3: return .incrementing
-        case 3...: return .executingAction
-        default: return .undefined
+        case ..<0: .resting
+        case 0: .engaged
+        case 0...3: .incrementing
+        case 3...: .executingAction
+        default: .undefined
         }
     }
 }

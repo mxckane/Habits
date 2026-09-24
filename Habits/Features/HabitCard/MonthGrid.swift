@@ -5,16 +5,15 @@
 //  Created by Andrey on 28/08/2026.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct MonthGrid: View {
-    
     @Query private var records: [Record]
-    
+
     private let cellSize: CGFloat
     private let model: MonthGridViewModel
-    
+
     init(cellSize: CGFloat, model: MonthGridViewModel) {
         let habitID = model.habit.id
         let timeInterval = model.date.interval(of: .month)
@@ -23,12 +22,12 @@ struct MonthGrid: View {
             && record.timestamp >= timeInterval.start
             && record.timestamp < timeInterval.end
         }
-        
+
         self._records = Query(filter: predicate)
         self.cellSize = cellSize
         self.model = model
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4.0) {
             Text(model.monthName)
@@ -42,24 +41,26 @@ struct MonthGrid: View {
                     GridRow {
                         ForEach(0..<model.columnCount, id: \.self) { column in
                             let index = row + column * 7
-                            
+
                             let date = Calendar.current.date(
                                 byAdding: .day,
                                 value: index - model.paddingCellCount,
                                 to: model.date
                             )!
-                            
+
                             let state: Mark.State =
                             if !model.validIndexRange.contains(index) {
                                 .placeholder
-                            } else if records.contains(where: { Calendar.current.isDate($0.timestamp, inSameDayAs: date) }) {
+                            } else if records.contains(where: { record in
+                                Calendar.current.isDate(record.timestamp, inSameDayAs: date)
+                            }) {
                                 .checked
                             } else if date.isToday {
                                 .today
                             } else {
                                 .unchecked
                             }
-                            
+
                             Mark(state: state)
                         }
                     }
@@ -75,19 +76,19 @@ struct MonthGrid: View {
 #Preview {
     @Previewable @State var offset = 0
     let habit = Habit(emoji: "🌁", title: "Sample")
-    
+
     var date: Date {
         Calendar.current.date(byAdding: .month, value: offset, to: .now)!
     }
-    
+
     var stepperText: String {
         "\(date.formatted(.dateTime.month(.wide))) \(date.formatted(.dateTime.year()))"
     }
-    
+
     var model: MonthGridViewModel {
         MonthGridViewModel(date: date, habit: habit)
     }
-    
+
     VStack(spacing: 32.0) {
         MonthGrid(cellSize: 22.0, model: model)
         Stepper(stepperText, value: $offset)

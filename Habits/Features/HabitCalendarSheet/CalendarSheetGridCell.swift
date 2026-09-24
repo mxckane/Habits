@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct CalendarSheetGridCell: View {
-    
     let date: Date
     let hasRecord: Bool
     let isToday: Bool
     let isDisabled: Bool
     let habit: Habit
-    
+
     @State private var isBackgroundFilled: Bool
     @State private var visualHasRecord: Bool
     @State private var isAwaitingDelay = false
-    
+
     @State private var animationOffset: CGFloat = 0.0
     @State private var scaleX: CGFloat = 0.0
     @State private var scaleY: CGFloat = 0.0
-    
+
     @State private var textScale: CGFloat = 1.0
     @State private var indicatorColor: Color = .clear
-    
+
     init(date: Date, hasRecord: Bool, isToday: Bool, isDisabled: Bool, habit: Habit) {
         self.date = date
         self.hasRecord = hasRecord
@@ -35,12 +34,12 @@ struct CalendarSheetGridCell: View {
         self._visualHasRecord = State(initialValue: hasRecord)
         self._isBackgroundFilled = State(initialValue: hasRecord)
     }
-    
+
     var body: some View {
         let indicatorWidth: CGFloat = visualHasRecord ? 16.0 : 6.0
         let indicatorHeight: CGFloat = visualHasRecord ? 4.0 : 6.0
         let cellFillColor: Color = .accent
-        
+
         Text(date.formatted(.dateTime.day(.defaultDigits)))
             .fixedSize()
             .font(.title3.bold())
@@ -112,20 +111,21 @@ struct CalendarSheetGridCell: View {
                     }
             }
             .onTapGesture {
-                guard !isDisabled else { return }
-                guard !isAwaitingDelay else { return }
-                
+                guard !isDisabled && !isAwaitingDelay else {
+                    return
+                }
+
                 DataManager.shared.toggleRecord(for: habit, on: date)
-                
+
                 isAwaitingDelay = true
-                
+
                 Task {
                     withAnimation(.smooth(duration: 0.35)) {
                         isBackgroundFilled.toggle()
                     }
-                    
+
                     try? await Task.sleep(for: .seconds(0.35))
-                    
+
                     withAnimation(.smooth) {
                         visualHasRecord.toggle()
                     } completion: {

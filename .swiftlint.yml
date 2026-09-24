@@ -1,1 +1,42 @@
+opt_in_rules:
+- all
 
+analyzer_rules:
+- all
+
+disabled_rules:
+- explicit_acl
+- explicit_top_level_acl
+- explicit_type_interface
+
+- required_deinit
+- explicit_enum_raw_value
+
+- attributes
+- contrasted_opening_brace
+- vertical_whitespace_between_cases
+
+- accessibility_label_for_image
+- accessibility_trait_for_button
+
+# --- Consider enabling --- #
+
+- force_try
+- no_magic_numbers
+- force_unwrapping
+- todo
+- type_contents_order
+- prefer_condition_list
+- switch_case_on_newline
+- prefixed_toplevel_constant
+- file_name
+- discouraged_default_parameter
+- closure_body_length
+- function_body_length
+- line_length
+
+no_empty_block:
+    allow_compact_empty_blocks: true
+
+trailing_comma:
+    mandatory_comma: true

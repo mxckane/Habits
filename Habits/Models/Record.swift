@@ -9,10 +9,9 @@ import Foundation
 import SwiftData
 
 @Model class Record {
-    
     var habit: Habit?
     var timestamp: Date
-    
+
     init(
         habit: Habit,
         timestamp: Date = .now

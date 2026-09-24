@@ -8,33 +8,40 @@
 import SwiftUI
 
 @Observable final class ModalManager {
-    
     static let shared = ModalManager()
-    
+
     private init() {}
-    
+
     var isPresented = false
     var isInteractionBlocked = false
     var currentContent: ModalContent = .newHabitSheet
     var presentationID = UUID()
-    
+
     let modalAnimationTime: Double = 0.5
     var interactionBlockingTime: Double { modalAnimationTime }
-    
+
+    enum ModalContent: Equatable {
+        case newHabitSheet
+        case habitInfoSheet(_ habit: Habit)
+        case habitCalendarSheet(_ habit: Habit, _ date: Date)
+    }
+
     func present(_ modal: ModalContent) {
-        guard !isInteractionBlocked else { return }
-        
+        guard !isInteractionBlocked else {
+            return
+        }
+
         switch modal {
         case .newHabitSheet:
             currentContent = .newHabitSheet
-        case .habitInfoSheet(let habit):
+        case let .habitInfoSheet(habit):
             currentContent = .habitInfoSheet(habit)
-        case .habitCalendarSheet(let habit, let date):
+        case let .habitCalendarSheet(habit, date):
             currentContent = .habitCalendarSheet(habit, date)
         }
-        
+
         presentationID = UUID()
-        
+
         Task {
             isInteractionBlocked = true
             isPresented = true
@@ -42,10 +49,12 @@ import SwiftUI
             isInteractionBlocked = false
         }
     }
-    
+
     func dismiss() {
-        guard !isInteractionBlocked else { return }
-        
+        guard !isInteractionBlocked else {
+            return
+        }
+
         Task {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             isInteractionBlocked = true
@@ -53,13 +62,5 @@ import SwiftUI
             try? await Task.sleep(for: .seconds(interactionBlockingTime))
             isInteractionBlocked = false
         }
-    }
-}
-
-extension ModalManager {
-    enum ModalContent: Equatable {
-        case newHabitSheet
-        case habitInfoSheet(_ habit: Habit)
-        case habitCalendarSheet(_ habit: Habit, _ date: Date)
     }
 }

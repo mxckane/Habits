@@ -9,16 +9,15 @@ import Combine
 import SwiftUI
 
 extension View {
-    
     func modalPresenter() -> some View {
         modifier(ModalPresenter())
     }
-    
+
     // TODO: Replace current instances
     func modify(@ViewBuilder _ transform: (_ view: Self) -> some View) -> some View {
         transform(self)
     }
-    
+
     /// Applies a glass effect to this view using #available expression
     @ViewBuilder func glassEffect(
         isClear: Bool = false,
@@ -28,24 +27,25 @@ extension View {
         _ fallbackView: ((Self) -> some View)? = nil
     ) -> some View {
         if #available(anyAppleOS 26.0, *) {
-            let glass: Glass = {
-                if isClear {
-                    return Glass.clear.interactive(isInteractive).tint(tint)
-                } else {
-                    return Glass.regular.interactive(isInteractive).tint(tint)
-                }
-            }()
-            
+            let glass = (isClear ? Glass.clear : Glass.regular)
+                .interactive(isInteractive)
+                .tint(tint)
             self.glassEffect(glass, in: shape)
+        } else if let fallbackView {
+            fallbackView(self)
         } else {
-            if let fallbackView {
-                fallbackView(self)
-            } else {
-                self
-            }
+            self
         }
     }
-    
+
+    func defaultStyleShape<S: InsettableShape>(
+        _ shape: S,
+        hasStroke: Bool = true,
+        isElevated: Bool = false
+    ) -> some View {
+        shape.applyDefaultStyling(hasStroke: hasStroke, isElevated: isElevated)
+    }
+
     func readSize(_ dimension: Axis.Set, into property: Binding<CGFloat>) -> some View {
         self.onGeometryChange(for: CGFloat.self) { geometry in
             dimension == .horizontal ? geometry.size.width : geometry.size.height
@@ -53,21 +53,20 @@ extension View {
             property.wrappedValue = size
         }
     }
-    
+
     func receiveKeyboardPresentationState(_ state: Binding<Bool>) -> some View {
         let willShow = NotificationCenter.default
             .publisher(for: UIResponder.keyboardWillShowNotification)
             .map { _ in true }
-        
+
         let willHide = NotificationCenter.default
             .publisher(for: UIResponder.keyboardWillHideNotification)
             .map { _ in false }
-        
+
         let publisher = Publishers.Merge(willShow, willHide)
-        
+
         return self.onReceive(publisher) { output in
             state.wrappedValue = output
         }
     }
-    
 }
