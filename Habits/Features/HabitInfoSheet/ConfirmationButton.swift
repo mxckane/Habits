@@ -70,8 +70,6 @@ struct ConfirmationButton: View {
             }
         }
         .background {
-            DefaultStyleShape(.capsule)
-
             GeometryReader { proxy in
                 Capsule()
                     .foregroundStyle(.deleteButtonLabel)

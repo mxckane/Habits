@@ -10,7 +10,6 @@ import SwiftUI
 // TODO: Review
 
 struct MonthGridStats: View {
-    private let habit: Habit
     private let monthGridViewModels: [MonthGridViewModel]
 
     @State private var availableWidth: CGFloat = 0.0
@@ -28,7 +27,6 @@ struct MonthGridStats: View {
     init(_ habit: Habit) {
         let currentMonthDate = Date.now.leavingComponents([.calendar, .year, .month])
 
-        self.habit = habit
         self.monthGridViewModels = (-2...0).map { offset in
             let date = Calendar.current.date(byAdding: .month, value: offset, to: currentMonthDate)!
             return MonthGridViewModel(date: date, habit: habit)
