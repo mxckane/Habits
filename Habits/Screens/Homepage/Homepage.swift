@@ -35,22 +35,14 @@ struct Homepage: View {
         .ignoresSafeArea(.container)
     }
 
-    func newHabitButton() -> some View {
+    @ViewBuilder func newHabitButton() -> some View {
         Button {
             ModalManager.shared.present(.newHabitSheet)
         } label: {
             Image(systemName: "plus")
                 .font(.system(size: 18, weight: .medium))
                 .foregroundStyle(.isLiquidGlassAvailable ? .complementary : .accent)
-        }
-        .modify { view in
-            if #available(iOS 26.0, *) {
-                view
-                    .tint(.accentGlass)
-                    .buttonStyle(.glassProminent)
-            } else {
-                view
-            }
+                .glassEffect(isClear: false, isInteractive: false, tint: .accentGlass)
         }
     }
 }

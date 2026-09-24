@@ -63,19 +63,15 @@ struct ModalPresenter: ViewModifier {
                         .frame(maxWidth: .infinity)
                         .readSize(.vertical, into: $sheetContentHeight)
                         .frame(height: sheetContentHeight, alignment: .top)
-                        .modify { view in
-                            if #available(iOS 26.0, *) {
-                                view.glassEffect(.regular.interactive(), in: sheetShape)
-                            } else {
-                                view
-                                    .background(
-                                        sheetShape
-                                            .fill(.sheetBackground)
-                                    )
-                                    .overlay {
-                                        sheetShape.strokeBorder(.sheetStroke, style: .init(lineWidth: 1))
-                                    }
-                            }
+                        .glassEffect(isInteractive: true, in: sheetShape) { view in
+                            view
+                                .background(
+                                    sheetShape
+                                        .fill(.sheetBackground)
+                                )
+                                .overlay {
+                                    sheetShape.strokeBorder(.sheetStroke, style: .init(lineWidth: 1))
+                                }
                         }
                         .padding([.leading, .trailing, .bottom], sheetPadding)
                         .shadow(color: .black.opacity(0.06), radius: 8)

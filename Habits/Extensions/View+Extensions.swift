@@ -13,28 +13,42 @@ extension View {
         modifier(ModalPresenter())
     }
 
-    // TODO: Replace current instances
-    func modify(@ViewBuilder _ transform: (_ view: Self) -> some View) -> some View {
-        transform(self)
+    /// Applies a glass effect to this view.
+    @ViewBuilder
+    func glassEffect(
+        isClear: Bool = false,
+        isInteractive: Bool = false,
+        tint: Color? = nil,
+        in shape: some Shape = Capsule()
+    ) -> some View {
+        if #available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, *) {
+            let glass = (isClear ? Glass.clear : Glass.regular)
+                .interactive(isInteractive)
+                .tint(tint)
+
+            self.glassEffect(glass, in: shape)
+        } else {
+            self
+        }
     }
 
-    /// Applies a glass effect to this view using #available expression
-    @ViewBuilder func glassEffect(
+    /// Applies a glass effect with a custom fallback.
+    @ViewBuilder
+    func glassEffect<Fallback: View>(
         isClear: Bool = false,
         isInteractive: Bool = false,
         tint: Color? = nil,
         in shape: some Shape = Capsule(),
-        _ fallbackView: ((Self) -> some View)? = nil
+        @ViewBuilder fallbackView: (Self) -> Fallback
     ) -> some View {
-        if #available(anyAppleOS 26.0, *) {
+        if #available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, *) {
             let glass = (isClear ? Glass.clear : Glass.regular)
                 .interactive(isInteractive)
                 .tint(tint)
+
             self.glassEffect(glass, in: shape)
-        } else if let fallbackView {
-            fallbackView(self)
         } else {
-            self
+            fallbackView(self)
         }
     }
 

@@ -64,14 +64,7 @@ struct HabitInfoSheet: View {
                         .tint(.accent)
                         .font(.system(size: 22, weight: .regular))
                 }
-                .modify { view in
-                    if #available(iOS 26.0, *) {
-                        view
-                            .glassEffect(.regular.interactive())
-                    } else {
-                        view
-                    }
-                }
+                .glassEffect(isInteractive: true)
         }
     }
 
@@ -98,14 +91,7 @@ struct HabitInfoSheet: View {
                         .tint(.sheetBackground)
                         .font(.system(size: 22, weight: .medium))
                 }
-                .modify { view in
-                    if #available(iOS 26.0, *) {
-                        view
-                            .glassEffect(.regular.interactive(isEnabled))
-                    } else {
-                        view
-                    }
-                }
+                .glassEffect(isInteractive: isEnabled)
         }
         .allowsHitTesting(isEnabled)
         .animation(.smooth(duration: 0.3), value: isEnabled)
