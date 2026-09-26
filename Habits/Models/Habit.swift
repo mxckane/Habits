@@ -28,3 +28,7 @@ import SwiftData
         self.records = []
     }
 }
+
+extension Habit {
+    static let sample = Habit(emoji: "🌁", title: "Sample Habit")
+}
