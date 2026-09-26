@@ -32,7 +32,7 @@ struct HabitCard: View {
 
     var body: some View {
         VStack(spacing: displayMode == .week ? 8.0 : 12.0) {
-            CardHeader(habit)
+            CardHeader(habit: habit)
 
             switch displayMode {
             case .week: WeekRowStats(habit: habit)
