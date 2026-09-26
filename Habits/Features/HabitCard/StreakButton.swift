@@ -30,7 +30,7 @@ struct StreakButton: View {
 
         var count = 0
         var dateToCheck = Date.startOfToday
-        let recordDates: Set<Date> = Set(records.map { calendar.startOfDay(for: $0.timestamp) })
+        let recordDates = Set(records.map { calendar.startOfDay(for: $0.timestamp) })
 
         if !recordDates.contains(dateToCheck) {
             dateToCheck = calendar.date(byAdding: .day, value: -1, to: .startOfToday)!
@@ -61,18 +61,20 @@ struct StreakButton: View {
             if let todayRecord {
                 DataManager.shared.delete(todayRecord)
             } else {
-                DataManager.shared.insert(Record(habit: habit))
+                let newRecord = Record(habit: habit)
+                DataManager.shared.insert(newRecord)
             }
         } label: {
-            HStack(spacing: 2) {
+            HStack(spacing: 2.0) {
                 Image(systemName: "bolt.fill")
                 Text(String(streak))
             }
-            .padding(8)
-            .font(.headline)
-            .frame(height: 38)
-            .foregroundStyle(isTodayChecked ? .streakButtonLabelChecked : .accent)
-            .background(isTodayChecked ? .accent : .clear, in: RoundedRectangle(cornerRadius: 12))
+            .foregroundStyle(isTodayChecked ? .labelPrimary : .accentPrimary)
+            .font(.system(size: 17.0))
+            .fontWeight(.semibold)
+            .padding(8.0)
+            .frame(height: 38.0)
+            .background(isTodayChecked ? .accentPrimary : .clear, in: RoundedRectangle(cornerRadius: 12.0))
         }
     }
 }
@@ -81,4 +83,5 @@ struct StreakButton: View {
     let habit = Habit(emoji: "🎯", title: "Preview Habit")
 
     StreakButton(habit: habit)
+        .modelContainer(DataManager.shared.container)
 }
