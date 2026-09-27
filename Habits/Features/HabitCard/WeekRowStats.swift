@@ -8,26 +8,20 @@
 import SwiftData
 import SwiftUI
 
-// MARK: Try using computed property Habit.records instead of query
-
 struct WeekRowStats: View {
-    private let habit: Habit
-
     @Query private var records: [Record]
 
     @State private var markHeight: CGFloat = 0.0
 
-    private var datesRange: [Date] = {
-        var dates: [Date] = []
+    private let habit: Habit
+
+    private var dates = {
         let startOfCurrentWeek = Calendar.current.dateInterval(of: .weekOfYear, for: .now)!.start
         let weekRowLastDate = Calendar.current.date(byAdding: .day, value: 6, to: startOfCurrentWeek)!
 
-        (0..<10).reversed().forEach { index in
-            let dateToAdd = Calendar.current.date(byAdding: .day, value: -index, to: weekRowLastDate)!
-            dates.append(dateToAdd)
+        return (0..<10).reversed().map { index in
+            Calendar.current.date(byAdding: .day, value: -index, to: weekRowLastDate)!
         }
-
-        return dates
     }()
 
     init(habit: Habit) {
@@ -40,9 +34,9 @@ struct WeekRowStats: View {
     }
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 8.0) {
             ForEach(
-                Array(datesRange.enumerated()), id: \.offset
+                Array(dates.enumerated()), id: \.offset
             ) { index, date in
                 weekRowCell(
                     date: date,
@@ -62,13 +56,14 @@ struct WeekRowStats: View {
         let state: Mark.State = hasRecord ? .checked : isToday ? .today : .unchecked
         let symbol = date.formatted(.dateTime.weekday(.narrow))
 
-        VStack(spacing: 4) {
+        VStack(spacing: 4.0) {
             Mark(state: state)
                 .readSize(.vertical, into: $markHeight)
             Text(symbol)
-                .frame(height: 14)
-                .foregroundStyle(.accent)
-                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(.accentPrimary)
+                .font(.system(size: 9.0))
+                .fontWeight(.semibold)
+                .frame(height: 16.0)
         }
         .contentShape(.rect)
         .onTapGesture {
@@ -77,14 +72,14 @@ struct WeekRowStats: View {
     }
 
     private func separatorColumn() -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 4.0) {
             Capsule()
-                .fill(.weekRowSeparator)
-                .padding(.vertical, 2)
-                .frame(width: 1.5, height: markHeight)
+                .fill(.accentSecondary)
+                .padding(.vertical, 1.5)
+                .frame(width: 1.0, height: markHeight)
             Capsule()
-                .fill(.weekRowSeparatorSecondary)
-                .frame(width: 1.5, height: 14)
+                .fill(.accentSecondary)
+                .frame(width: 1.0, height: 16.0)
         }
     }
 }
