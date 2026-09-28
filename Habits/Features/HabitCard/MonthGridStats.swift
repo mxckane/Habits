@@ -12,7 +12,7 @@ import SwiftUI
 struct MonthGridStats: View {
     private let monthGridViewModels: [MonthGridViewModel]
 
-    @State private var availableWidth: CGFloat = 0.0
+    @State private var availableWidth: CGFloat?
     private let columnCount: Int
     private let cellSpacing: CGFloat
     private let gridCount: Int
@@ -21,7 +21,7 @@ struct MonthGridStats: View {
     private var cellSize: CGFloat {
         let cellsWidth = CGFloat(columnCount - gridCount) * cellSpacing
         let gridsWidth = CGFloat(gridCount - 1) * gridSpacing
-        return (availableWidth - cellsWidth - gridsWidth) / CGFloat(columnCount)
+        return (availableWidth ?? .zero - cellsWidth - gridsWidth) / CGFloat(columnCount)
     }
 
     init(_ habit: Habit) {

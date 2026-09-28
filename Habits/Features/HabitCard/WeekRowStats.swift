@@ -11,7 +11,7 @@ import SwiftUI
 struct WeekRowStats: View {
     @Query private var records: [Record]
 
-    @State private var markHeight: CGFloat = 0.0
+    @State private var markHeight: CGFloat?
 
     private let habit: Habit
 

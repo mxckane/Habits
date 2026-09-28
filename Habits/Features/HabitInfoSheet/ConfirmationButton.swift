@@ -23,7 +23,7 @@ struct ConfirmationButton: View {
 
     @State private var buttonFrame: CGRect = .zero
     @State private var dragLocation: CGPoint = .zero
-    @State private var fillingCapsuleWidth: CGFloat = .zero
+    @State private var fillingCapsuleWidth: CGFloat?
 
     var body: some View {
         HStack(spacing: 4) {

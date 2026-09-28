@@ -18,7 +18,7 @@ struct HabitCalendarSheet: View {
 
     @State private var focusedMonth: Date?
 
-    @State private var monthGridHeaderHeight: CGFloat = .zero
+    @State private var monthGridHeaderHeight: CGFloat?
 
     private let calendar = Calendar.current
 

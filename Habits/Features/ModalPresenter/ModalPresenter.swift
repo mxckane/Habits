@@ -11,7 +11,7 @@ struct ModalPresenter: ViewModifier {
     private let manager = ModalManager.shared
 
     @State private var isKeyboardPresented = false
-    @State private var sheetContentHeight: CGFloat = 0
+    @State private var sheetContentHeight: CGFloat?
 
     private var blurRadius: CGFloat { manager.isPresented ? 6 : 0 }
 

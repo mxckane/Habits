@@ -60,7 +60,7 @@ extension View {
         shape.applyDefaultStyling(hasStroke: hasStroke, isElevated: isElevated)
     }
 
-    func readSize(_ dimension: Axis.Set, into property: Binding<CGFloat>) -> some View {
+    func readSize(_ dimension: Axis.Set, into property: Binding<CGFloat?>) -> some View {
         self.onGeometryChange(for: CGFloat.self) { geometry in
             dimension == .horizontal ? geometry.size.width : geometry.size.height
         } action: { size in
