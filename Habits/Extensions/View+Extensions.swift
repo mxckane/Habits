@@ -52,14 +52,6 @@ extension View {
         }
     }
 
-    func defaultStyleShape<S: InsettableShape>(
-        _ shape: S,
-        hasStroke: Bool = true,
-        isElevated: Bool = false
-    ) -> some View {
-        shape.applyDefaultStyling(hasStroke: hasStroke, isElevated: isElevated)
-    }
-
     func readSize(_ dimension: Axis.Set, into property: Binding<CGFloat?>) -> some View {
         self.onGeometryChange(for: CGFloat.self) { geometry in
             dimension == .horizontal ? geometry.size.width : geometry.size.height

@@ -16,7 +16,7 @@ struct EmojiPicker: View {
 
     var body: some View {
         Circle()
-            .applyDefaultStyling()
+//            .applyDefaultStyling()
             .frame(width: 44, height: 44)
             .overlay(content: overlayContent)
             .onChange(of: emoji, updateEmoji)

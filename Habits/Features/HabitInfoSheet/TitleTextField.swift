@@ -27,7 +27,7 @@ struct TitleTextField: View {
             .frame(height: 44)
             .padding(.horizontal, 12)
             .focused($isFocused)
-            .background(defaultStyleShape(.capsule))
+//            .background(defaultStyleShape(.capsule))
             .contentShape(.capsule)
             .onTapGesture { isFocused = true }
     }
