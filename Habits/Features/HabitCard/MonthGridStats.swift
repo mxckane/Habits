@@ -21,7 +21,10 @@ struct MonthGridStats: View {
     private var cellSize: CGFloat {
         let cellsWidth = CGFloat(columnCount - gridCount) * cellSpacing
         let gridsWidth = CGFloat(gridCount - 1) * gridSpacing
-        return (availableWidth ?? .zero - cellsWidth - gridsWidth) / CGFloat(columnCount)
+        if let availableWidth {
+            return (availableWidth - cellsWidth - gridsWidth) / CGFloat(columnCount)
+        }
+        return .zero
     }
 
     init(_ habit: Habit) {
