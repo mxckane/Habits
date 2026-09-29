@@ -6,20 +6,15 @@
 //
 
 import SwiftUI
-// AMEND
+
 struct HabitCard: View {
     @AppStorage private var statisticsDisplayMode: String
 
+    private var displayMode: StatisticsDisplayMode? {
+        StatisticsDisplayMode(rawValue: statisticsDisplayMode)
+    }
+
     private let habit: Habit
-
-    private var displayMode: StatisticsDisplayMode {
-        StatisticsDisplayMode(rawValue: statisticsDisplayMode) ?? .week
-    }
-
-    enum StatisticsDisplayMode: String {
-        case week
-        case month
-    }
 
     init(_ habit: Habit) {
         self.habit = habit
@@ -31,20 +26,31 @@ struct HabitCard: View {
     }
 
     var body: some View {
-        VStack(spacing: displayMode == .week ? 8.0 : 12.0) {
+        VStack(spacing: 8.0) {
             CardHeader(habit: habit)
-
             switch displayMode {
             case .week: WeekRowStats(habit: habit)
             case .month: MonthGridStats(habit)
+            default: Color.orange // TODO: Fallback to error view
             }
         }
-        .padding(12)
-        .background(defaultStyleShape(RoundedRectangle(cornerRadius: 24), isElevated: true))
+        .padding(12.0)
+        .background {
+            RoundedRectangle(cornerRadius: 24.0)
+                .fill(.backgroundSecondary)
+                .shadow(color: .black.opacity(0.125), radius: 20.0, x: 0.0, y: 4.0)
+        }
+    }
+}
+
+extension HabitCard {
+    enum StatisticsDisplayMode: String {
+        case week
+        case month
     }
 }
 
 #Preview {
-    HabitCard(.init(emoji: "🌁", title: "Sample"))
-        .padding(16.0)
+    HabitCard(.sample)
+        .padding(.horizontal, 16.0)
 }
