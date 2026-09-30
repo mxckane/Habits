@@ -31,7 +31,7 @@ struct HabitCard: View {
             switch displayMode {
             case .week: WeekRowStats(habit: habit)
             case .month: MonthGridStats(habit)
-            default: Color.orange // TODO: Fallback to error view
+            default: MissingStatsView()
             }
         }
         .padding(12.0)
