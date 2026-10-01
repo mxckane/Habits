@@ -13,6 +13,7 @@ struct MissingStatsView: View {
             Image(systemName: "exclamationmark.triangle")
                 .foregroundStyle(.accentPrimary)
                 .font(.system(size: 30.0))
+                .frame(width: 38.0, height: 38.0)
             Text("An error occurred while attempting to load your statistics")
                 .foregroundStyle(.accentPrimary)
                 .font(.system(size: 16.0))
@@ -20,6 +21,7 @@ struct MissingStatsView: View {
             Text("Try closing and restarting the app")
                 .foregroundStyle(.labelSecondary)
                 .font(.system(size: 14.0))
+                .multilineTextAlignment(.center)
         }
         .padding(.horizontal, 38.0)
         .padding(.vertical, 16.0)

@@ -9,6 +9,8 @@ import SwiftUI
 
 // TODO: Review
 
+// TODO: Update styling
+
 struct MonthGridStats: View {
     private let monthGridViewModels: [MonthGridViewModel]
 
