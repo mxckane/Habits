@@ -1,5 +1,5 @@
 //
-//  MissingStatsView.swift
+//  StatsErrorView.swift
 //  Habits
 //
 //  Created by Andrey on 30/09/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MissingStatsView: View {
+struct StatsErrorView: View {
     var body: some View {
         VStack(spacing: 8.0) {
             Image(systemName: "exclamationmark.triangle")
@@ -43,6 +43,6 @@ struct MissingStatsView: View {
 }
 
 #Preview {
-    MissingStatsView()
+    StatsErrorView()
         .padding(.horizontal)
 }

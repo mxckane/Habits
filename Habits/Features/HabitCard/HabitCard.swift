@@ -31,7 +31,7 @@ struct HabitCard: View {
             switch displayMode {
             case .week: WeekRowStats(habit: habit)
             case .month: MonthGridStats(habit)
-            default: MissingStatsView()
+            default: StatsErrorView()
             }
         }
         .padding(12.0)
