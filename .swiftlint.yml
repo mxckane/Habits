@@ -11,10 +11,13 @@ disabled_rules:
 
 - required_deinit
 - explicit_enum_raw_value
+- anonymous_argument_in_multiline_closure
 
 - attributes
 - contrasted_opening_brace
 - vertical_whitespace_between_cases
+
+- no_grouping_extension
 
 - accessibility_label_for_image
 - accessibility_trait_for_button
@@ -40,3 +43,6 @@ no_empty_block:
 
 trailing_comma:
     mandatory_comma: true
+
+indentation_width:
+    include_comments: false
