@@ -16,8 +16,6 @@ struct MonthGridViewModel {
     let validIndexRange: Range<Int>
     let monthName: String
 
-    let cellSpacing: CGFloat = 2.0
-
     init(date: Date, habit: Habit) {
         self.date = date.leavingComponents([.calendar, .year, .month])
         self.habit = habit

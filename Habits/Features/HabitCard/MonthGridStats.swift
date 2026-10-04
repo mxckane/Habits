@@ -9,8 +9,6 @@ import SwiftUI
 
 // TODO: Review
 
-// TODO: Update styling AMEND
-
 struct MonthGridStats: View {
     private let monthGridViewModels: [MonthGridViewModel]
 
@@ -37,7 +35,7 @@ struct MonthGridStats: View {
             return MonthGridViewModel(date: date, habit: habit)
         }
         self.columnCount = monthGridViewModels.reduce(0) { $0 + $1.columnCount }
-        self.cellSpacing = monthGridViewModels.first?.cellSpacing ?? 0.0
+        self.cellSpacing = MonthGrid.cellSpacing
         self.gridCount = monthGridViewModels.count
     }
 

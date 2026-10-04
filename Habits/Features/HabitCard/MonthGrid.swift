@@ -12,6 +12,8 @@ struct MonthGrid: View {
     @Query private var records: [Record]
 
     private let cellSize: CGFloat
+    static let cellSpacing: CGFloat = 2.0
+
     private let model: MonthGridViewModel
 
     init(cellSize: CGFloat, model: MonthGridViewModel) {
@@ -36,7 +38,7 @@ struct MonthGrid: View {
                 .font(.footnote)
                 .fontWeight(.bold)
                 .frame(height: 18.0)
-            Grid(horizontalSpacing: model.cellSpacing, verticalSpacing: model.cellSpacing) {
+            Grid(horizontalSpacing: Self.cellSpacing, verticalSpacing: Self.cellSpacing) {
                 ForEach(0..<7) { row in
                     GridRow {
                         ForEach(0..<model.columnCount, id: \.self) { column in
