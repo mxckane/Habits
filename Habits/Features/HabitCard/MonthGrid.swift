@@ -11,33 +11,34 @@ import SwiftUI
 struct MonthGrid: View {
     @Query private var records: [Record]
 
-    private let cellSize: CGFloat
     static let cellSpacing: CGFloat = 2.0
 
     private let model: MonthGridViewModel
+    private let cellSize: CGFloat
 
     init(cellSize: CGFloat, model: MonthGridViewModel) {
         let habitID = model.habit.id
         let timeInterval = model.date.interval(of: .month)
-        let predicate = #Predicate<Record> { record in
-            record.habit?.id == habitID
-            && record.timestamp >= timeInterval.start
-            && record.timestamp < timeInterval.end
+
+        let predicate = #Predicate<Record> {
+            $0.habit?.id == habitID &&
+            $0.timestamp >= timeInterval.start &&
+            $0.timestamp < timeInterval.end
         }
 
-        self._records = Query(filter: predicate)
-        self.cellSize = cellSize
+        self._records = Query(filter: predicate, sort: \.timestamp)
         self.model = model
+        self.cellSize = cellSize
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4.0) {
             Text(model.monthName)
-                .foregroundStyle(.accent)
+                .foregroundStyle(.accentPrimary)
+                .font(.system(size: 13.0))
+                .fontWeight(.semibold)
                 .lineLimit(1)
-                .font(.footnote)
-                .fontWeight(.bold)
-                .frame(height: 18.0)
+                .frame(height: 16.0)
             Grid(horizontalSpacing: Self.cellSpacing, verticalSpacing: Self.cellSpacing) {
                 ForEach(0..<7) { row in
                     GridRow {
@@ -71,13 +72,14 @@ struct MonthGrid: View {
             }
         }
         .contentShape(.rect)
-        .onTapGesture { ModalManager.shared.present(.habitCalendarSheet(model.habit, model.date)) }
+        .onTapGesture {
+            ModalManager.shared.present(.habitCalendarSheet(model.habit, model.date))
+        }
     }
 }
 
 #Preview {
     @Previewable @State var offset = 0
-    let habit = Habit(emoji: "🌁", title: "Sample")
 
     var date: Date {
         Calendar.current.date(byAdding: .month, value: offset, to: .now)!
@@ -88,7 +90,7 @@ struct MonthGrid: View {
     }
 
     var model: MonthGridViewModel {
-        MonthGridViewModel(date: date, habit: habit)
+        MonthGridViewModel(date: date, habit: .sample)
     }
 
     VStack(spacing: 32.0) {
